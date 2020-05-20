@@ -30,49 +30,49 @@ const timeBuckets = [
 ];
 
 const userCount = new Counter({
-  name: 'user_count',
+  name: 'calling_user_count',
   help: 'Amount of users that join',
 });
 
 const userConcurrent = new Gauge({
-  name: 'user_concurrent',
+  name: 'calling_user_concurrent',
   help: 'Amount of concurrent users',
 });
 
 const userDuration = new Histogram({
-  name: 'user_duration',
+  name: 'calling_user_duration',
   help: 'Time user was connected',
   buckets: timeBuckets,
 });
 
 const roomCount = new Counter({
-  name: 'room_count',
+  name: 'calling_room_count',
   help: 'Amount of rooms created',
 });
 
 const roomConcurrent = new Gauge({
-  name: 'room_concurrent',
+  name: 'calling_room_concurrent',
   help: 'Amount of concurrent rooms',
 });
 
 const roomDuration = new Histogram({
-  name: 'room_duration',
+  name: 'calling_room_duration',
   help: 'Time room was active',
   buckets: timeBuckets,
 });
 
 const namespaceCount = new Counter({
-  name: 'namespace_count',
+  name: 'calling_namespace_count',
   help: 'Amount of namespaces created',
 });
 
 const namespaceConcurrent = new Gauge({
-  name: 'namespace_concurrent',
+  name: 'calling_namespace_concurrent',
   help: 'Amount of concurrent namespaces',
 });
 
 const namespaceDuration = new Histogram({
-  name: 'namespace_duration',
+  name: 'calling_namespace_duration',
   help: 'Time namespace was active',
   buckets: timeBuckets,
 });

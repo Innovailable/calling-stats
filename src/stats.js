@@ -186,7 +186,6 @@ class SignalingStatistics {
     this.roomConcurrent.inc();
 
     room.once('closed', () => {
-      console.log('room closed', getPeak());
       this.roomConcurrent.dec();
       this.roomDuration.observe(timer());
       this.roomPeak.observe(getPeak());

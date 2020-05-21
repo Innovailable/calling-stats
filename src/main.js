@@ -1,15 +1,15 @@
 const express = require('express')
-const { CallingWebsocketServer } = require('calling-signaling');
-const { trackSignaling, addMetricsRoute } = require('./stats');
+const { CallingWebsocketServer, get_cli_options } = require('calling-signaling');
+const { SignalingStatistics } = require('./stats');
+
+const signaling = new CallingWebsocketServer(get_cli_options());
+const statistics = new SignalingStatistics(signaling);
 
 const app = express()
-const signaling = new CallingWebsocketServer(0);
-
 const signalingPort = Number(process.env.SIGNALING_PORT || 8010)
 const metricsPort = Number(process.env.METRICS_PORT || 8020)
 
-trackSignaling(signaling);
-addMetricsRoute(app);
+statistics.addMetricsRoute(app);
 
 Promise.all([
   signaling.listen(signalingPort),

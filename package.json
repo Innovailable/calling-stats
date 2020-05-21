@@ -3,7 +3,7 @@
   "private": true,
   "version": "1.0.0",
   "description": "Calling signaling server with prometheus stats",
-  "main": "src/main.js",
+  "main": "src/stats.js",
   "scripts": {
     "start": "node src/main.js",
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -11,8 +11,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "calling-signaling": "^0.1.1",
+    "calling-signaling": "^0.1.2",
     "express": "^4.17.1",
     "prom-client": "^12.0.0"
+  },
+  "bin": {
+    "calling-stats": "src/main.js"
   }
 }

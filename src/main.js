@@ -3,7 +3,7 @@ const { CallingWebsocketServer } = require('calling-signaling');
 const { trackSignaling, addMetricsRoute } = require('./stats');
 
 const app = express()
-const signaling = new CallingWebsocketServer();
+const signaling = new CallingWebsocketServer(0);
 
 const signalingPort = Number(process.env.SIGNALING_PORT || 8010)
 const metricsPort = Number(process.env.METRICS_PORT || 8020)

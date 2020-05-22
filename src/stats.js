@@ -25,7 +25,7 @@ function peakCount(obj) {
   return [get, update];
 }
 
-const timeBuckets = exponentialBuckets(30, 2, 20);
+const timeBuckets = exponentialBuckets(16, 2, 12);
 
 class SignalingStatistics {
   constructor(signaling, nodeMetrics=true) {

@@ -1,4 +1,4 @@
-const { Counter, Gauge, Histogram, exponentialBuckets, Registry } = require('prom-client');
+const { Counter, Gauge, Histogram, exponentialBuckets, linearBuckets, Registry, collectDefaultMetrics } = require('prom-client');
 
 function startTimer() {
   // TODO move to monotone time
@@ -25,30 +25,18 @@ function peakCount(obj) {
   return [get, update];
 }
 
-const timeBuckets = [
-  10,
-  30,
-  60,
-  2 * 60,
-  5 * 60,
-  10 * 10,
-  20 * 60,
-  30 * 60,
-  45 * 60,
-  60 * 60,
-  90 * 60,
-  120 * 60,
-  3 * 60 * 60,
-  4 * 60 * 60,
-  6 * 60 * 60,
-  8 * 60 * 60,
-  12 * 60 * 60,
-];
+const timeBuckets = exponentialBuckets(30, 2, 20);
 
 class SignalingStatistics {
-  constructor(signaling) {
+  constructor(signaling, nodeMetrics=true) {
     this.registry = new Registry();
     this.signaling = signaling;
+
+    if(nodeMetrics) {
+        collectDefaultMetrics({
+            register: this.registry,
+        });
+    }
 
     this.setupServer();
 
@@ -109,7 +97,7 @@ class SignalingStatistics {
     this.roomPeak = new Histogram({
       name: 'calling_room_members_peak',
       help: 'Peak amount of room members',
-      buckets: [1, 2, 3, 4, 5, 6, 7, 8, 10, 14, 22],
+      buckets: linearBuckets(1, 1, 15),
       registers: [this.registry],
     });
 

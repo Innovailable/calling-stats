@@ -70,6 +70,18 @@ class SignalingStatistics {
       registers: [this.registry],
     });
 
+    this.messageSent = new Counter({
+      name: 'calling_message_sent_count',
+      help: 'Amount of messages sent',
+      registers: [this.registry],
+    });
+
+    this.messageReceived = new Counter({
+      name: 'calling_message_received_count',
+      help: 'Amount of messages received',
+      registers: [this.registry],
+    });
+
     this.signaling.on('new_user', (user) => {
       this.handleUser(user);
     });
@@ -156,12 +168,21 @@ class SignalingStatistics {
   handleUser(user) {
     const timer = startTimer();
 
+    const sentCb = () => this.messageSent.inc()
+    const receivedCb = () => this.messageReceived.inc()
+
+    user.on('sent', sentCb);
+    user.on('received', receivedCb);
+
     this.userCount.inc();
     this.userConcurrent.inc();
 
     user.once('left', () => {
       this.userConcurrent.dec();
       this.userDuration.observe(timer());
+
+      user.removeListener('sent', sentCb);
+      user.removeListener('received', receivedCb);
     });
   }
 
@@ -184,7 +205,6 @@ class SignalingStatistics {
   }
 
   handleNamespace(ns) {
-    console.log(ns);
     const timer = startTimer();
     const [getSubscribePeak, updateSubscribePeak] = peakCount(ns.subscribed);
     const [getRegisterPeak, updateRegisterPeak] = peakCount(ns.registered);

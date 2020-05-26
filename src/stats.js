@@ -13,7 +13,8 @@ function peakCount(obj) {
   let max = 0;
 
   const update = (obj) => {
-    max = Math.max(Object.keys(obj).length, max);
+    const count = Object.keys(obj).length;
+    max = Math.max(count, max);
   };
 
   const get = () => {
@@ -183,14 +184,15 @@ class SignalingStatistics {
   }
 
   handleNamespace(ns) {
+    console.log(ns);
     const timer = startTimer();
     const [getSubscribePeak, updateSubscribePeak] = peakCount(ns.subscribed);
     const [getRegisterPeak, updateRegisterPeak] = peakCount(ns.registered);
     const [getRoomPeak, updateRoomPeak] = peakCount(ns.rooms);
 
-    room.on('subscribed_changed', updateSubscribePeak);
-    room.on('registered_changed', updateRegisterPeak);
-    room.on('rooms_changed', updateRoomsPeak);
+    ns.on('subscribed_changed', updateSubscribePeak);
+    ns.on('registered_changed', updateRegisterPeak);
+    ns.on('rooms_changed', updateRoomPeak);
 
     this.namespaceCount.inc();
     this.namespaceConcurrent.inc();
@@ -198,13 +200,13 @@ class SignalingStatistics {
     ns.once('closed', () => {
       this.namespaceConcurrent.dec();
       this.namespaceDuration.observe(timer());
-      this.namespaceSubscribePeak.observe(getSubscribePeak);
-      this.namespaceRegisterPeak.observe(getRegisterPeak);
-      this.namespaceRoomPeak.observe(getRoomPeak);
+      this.namespaceSubscribePeak.observe(getSubscribePeak());
+      this.namespaceRegisterPeak.observe(getRegisterPeak());
+      this.namespaceRoomPeak.observe(getRoomPeak());
 
-      room.removeListener('subscribed_changed', updateSubscribePeak);
-      room.removeListener('registered_changed', updateRegisterPeak);
-      room.removeListener('rooms_changed', updateRoomsPeak);
+      ns.removeListener('subscribed_changed', updateSubscribePeak);
+      ns.removeListener('registered_changed', updateRegisterPeak);
+      ns.removeListener('rooms_changed', updateRoomPeak);
     });
   }
 

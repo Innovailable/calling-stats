@@ -1,6 +1,5 @@
 {
   "name": "calling-stats",
-  "private": true,
   "version": "1.0.0",
   "description": "Calling signaling server with prometheus stats",
   "main": "src/stats.js",
